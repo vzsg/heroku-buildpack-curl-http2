@@ -1,0 +1,17 @@
+#!/bin/sh
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+echo "-----> Upgrading curl"
+DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.37.1.orig.tar.gz"
+
+echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
+
+wget $DOWNLOAD_URL
+tar -xf curl_7.37.1.orig.tar.gz
+cd curl-7.37.1
+configure
+make
+make install
