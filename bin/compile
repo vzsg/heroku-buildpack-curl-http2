@@ -4,6 +4,11 @@ indent() {
   sed -u 's/^/       /'
 }
 
+set-env() {
+  PROFILE_PATH="$BUILD_DIR/.profile.d/curl.sh"
+  echo "export $1=$2" >> $PROFILE_PATH
+}
+
 echo "-----> Upgrading curl"
 DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.52.1.orig.tar.gz"
 
@@ -16,5 +21,6 @@ cd curl-7.52.1
 make
 make install
 
+mkdir -p $BUILD_DIR/.profile.d
 set-env PATH '$HOME/vendor/bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/vendor/lib:$LD_LIBRARY_PATH'
