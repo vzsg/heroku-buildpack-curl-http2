@@ -5,13 +5,13 @@ indent() {
 }
 
 echo "-----> Upgrading curl"
-DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.37.1.orig.tar.gz"
+DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.52.1.orig.tar.gz"
 
 echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
 
 wget $DOWNLOAD_URL
-tar -xf curl_7.37.1.orig.tar.gz
-cd curl-7.37.1
-configure
+tar -xf curl_7.52.1.orig.tar.gz
+cd curl-7.52.1
+configure --prefix=$1/vendor/curl
 make
 make install
