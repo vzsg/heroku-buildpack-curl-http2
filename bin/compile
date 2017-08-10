@@ -29,27 +29,27 @@ git clone https://github.com/nghttp2/nghttp2.git | indent
 
 echo "-----> Building nghttp2"
 pushd nghttp2
-NGHTTP2_VERSION=$(git describe --tags)
+NGHTTP2_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
 git checkout $NGHTTP2_VERSION
-echo "Checked out $NGHTTP2_VERSION" | indent
-autoreconf -i | indent
-automake | indent
-autoconf | indent
-./configure --prefix=$BUILD_DIR/vendor | indent
-make | indent
-make install | indent
+echo "Checked out $NGHTTP2_VERSION" 2>&1 | indent
+autoreconf -i 2>&1 | indent
+automake 2>&1 | indent
+autoconf 2>&1 | indent
+./configure --prefix=$BUILD_DIR/vendor 2>&1 | indent
+make 2>&1 | indent
+make install 2>&1 | indent
 popd
 
 echo "-----> Downloading curl $CURL_VERSION sources"
 DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_$CURL_VERSION.orig.tar.gz"
-curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz
+curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz 2>&1 | indent
 
 echo "-----> Building curl"
 tar -xf curl_$CURL_VERSION.orig.tar.gz
 pushd curl-$CURL_VERSION
-./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor | indent
-make | indent
-make install | indent
+./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor 2>&1 | indent
+make 2>&1 | indent
+make install 2>&1 | indent
 popd
 
 echo "-----> Setting up environment"
