@@ -1,26 +1,42 @@
-#!/bin/sh
+xecutable File  224 lines (179 sloc)  6.26 KB
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
 
-indent() {
-  sed -u 's/^/       /'
-}
+### Configure environment
 
-set-env() {
-  PROFILE_PATH="$BUILD_DIR/.profile.d/curl.sh"
-  echo "export $1=$2" >> $PROFILE_PATH
-}
+set -o errexit    # always exit on error
+set -o pipefail   # don't ignore exit codes when piping output
+unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 
-echo "-----> Upgrading curl"
-DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.52.1.orig.tar.gz"
+### Constants
 
-echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
+CURL_VERSION=${CURL_VERSION:7.52.1}
 
-wget $DOWNLOAD_URL
-tar -xf curl_7.52.1.orig.tar.gz
-cd curl-7.52.1
-./configure --prefix=$1/vendor
+### Configure directories
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
+
+echo "-----> Downloading curl $CURL_VERSION sources"
+DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_$CURL_VERSION.orig.tar.gz"
+curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz
+
+echo "-----> Unpacking"
+tar -xf curl_$CURL_VERSION.orig.tar.gz
+pushd curl-$CURL_VERSION
+
+echo "-----> Configuring curl"
+./configure --prefix=$BUILD_DIR/vendor
+
+echo "-----> Building curl"
 make
-make install
 
+echo "-----> Vendoring curl"
+make install
+popd
+
+echo "-----> Setting up environment"
 mkdir -p $BUILD_DIR/.profile.d
-set-env PATH '$HOME/vendor/bin:$PATH'
-set-env LD_LIBRARY_PATH '$HOME/vendor/lib:$LD_LIBRARY_PATH'
+cp $BP_DIR/profile/* $BUILD_DIR/.profile.d/
