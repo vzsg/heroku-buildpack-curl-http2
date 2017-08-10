@@ -1,32 +1,22 @@
-Heroku buildpack: FFMpeg
-=======================
+Heroku buildpack: curl with HTTP/2 support
+==========================================
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for using [ffmpeg](http://www.ffmpeg.org/) in your project.  
-It doesn't do anything else, so to actually compile your app you should use [heroku-buildpack-multi](https://github.com/ddollar/heroku-buildpack-multi) to combine it with a real buildpack.
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) that shadows the system-provided `curl` executable and `libcurl` with a custom built version, most notably for its HTTP/2 support – provided by nghttp2.
+
+It is not meant to be used standalone, just as an extra layer before the actual language buildpack.
 
 Usage
 -----
-To use this buildpack, you should prepare .buildpacks file that contains this buildpack url and your real buildpack url.  
 
-    $ ls
-    .buildpacks
-    ...
-    
-    $ cat .buildpacks
-    https://github.com/shunjikonishi/heroku-buildpack-ffmpeg
-    https://github.com/heroku/heroku-buildpack-play
+See Heroku's documentation on [multiple buildpacks](https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app).
 
-    $ heroku create --buildpack https://github.com/ddollar/heroku-buildpack-multi
+Example for a Vapor app:
 
+    $ heroku buildpacks:set https://github.com/vapor-community/heroku-buildpack.git
+    $ heroku buildpacks:add https://github.com/vzsg/heroku-buildpack-curl-http2.git
     $ git push heroku master
     ...
 
-You can verify installing ffmpeg by following command.
+You can verify the installation using the following command:
 
-    $ heroku run "ffmpeg -version"
-
-Hacking
--------
-If you want to use your own ffmpeg binary, fork and rewrite following line.
-
-https://github.com/shunjikonishi/heroku-buildpack-ffmpeg/blob/master/bin/compile#L10
+    $ heroku run "curl --version"
