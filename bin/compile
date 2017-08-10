@@ -38,7 +38,7 @@ curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz
 echo "-----> Building curl"
 tar -xf curl_$CURL_VERSION.orig.tar.gz
 pushd curl-$CURL_VERSION
-./configure --prefix=$BUILD_DIR/vendor
+./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor
 make
 make install
 popd
