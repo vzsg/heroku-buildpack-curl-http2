@@ -18,21 +18,28 @@ CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
+echo "-----> Cloning nghttp2"
+git clone https://github.com/tatsuhiro-t/nghttp2.git
+
+echo "-----> Building nghttp2"
+pushd nghttp2
+autoreconf -i
+automake
+autoconf
+./configure --prefix=$BUILD_DIR/vendor
+make
+make install
+popd
+
 echo "-----> Downloading curl $CURL_VERSION sources"
 DOWNLOAD_URL="http://archive.ubuntu.com/ubuntu/pool/main/c/curl/curl_$CURL_VERSION.orig.tar.gz"
 curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz
 
-echo "-----> Unpacking"
+echo "-----> Building curl"
 tar -xf curl_$CURL_VERSION.orig.tar.gz
 pushd curl-$CURL_VERSION
-
-echo "-----> Configuring curl"
 ./configure --prefix=$BUILD_DIR/vendor
-
-echo "-----> Building curl"
 make
-
-echo "-----> Vendoring curl"
 make install
 popd
 
