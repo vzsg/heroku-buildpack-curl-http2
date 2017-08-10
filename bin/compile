@@ -32,7 +32,7 @@ echo "-----> Configuring nghttp2"
 autoreconf -i 2>&1 | indent
 automake 2>&1 | indent
 autoconf 2>&1 | indent
-./configure --enable-silent-rules --prefix=$BUILD_DIR/vendor 2>&1 | indent
+./configure --prefix=$BUILD_DIR/vendor 2>&1 | indent
 echo "-----> Building nghttp2"
 make 2>&1 | indent
 echo "-----> Installing nghttp2"
@@ -45,7 +45,7 @@ curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz 2>&1 | indent
 tar -xf curl_$CURL_VERSION.orig.tar.gz
 pushd curl-$CURL_VERSION
 echo "-----> Configuring curl"
-./configure --enable-silent-rules --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor 2>&1 | indent
+./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor 2>&1 | indent
 echo "-----> Building curl"
 make 2>&1 | indent
 echo "-----> Installing curl"
