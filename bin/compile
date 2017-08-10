@@ -7,6 +7,12 @@ set -o errexit    # always exit on error
 set -o pipefail   # don't ignore exit codes when piping output
 unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 
+### Formatting utilities
+
+indent() {
+  sed -u 's/^/       /'
+}
+
 ### Constants
 
 CURL_VERSION=7.52.1
@@ -19,16 +25,19 @@ ENV_DIR=${3:-}
 BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
 echo "-----> Cloning nghttp2"
-git clone https://github.com/tatsuhiro-t/nghttp2.git
+git clone https://github.com/nghttp2/nghttp2.git | indent
 
 echo "-----> Building nghttp2"
 pushd nghttp2
-autoreconf -i
-automake
-autoconf
-./configure --prefix=$BUILD_DIR/vendor
-make
-make install
+NGHTTP2_VERSION=$(git describe --tags)
+git checkout $NGHTTP2_VERSION
+echo "Checked out $NGHTTP2_VERSION" | indent
+autoreconf -i | indent
+automake | indent
+autoconf | indent
+./configure --prefix=$BUILD_DIR/vendor | indent
+make | indent
+make install | indent
 popd
 
 echo "-----> Downloading curl $CURL_VERSION sources"
@@ -38,9 +47,9 @@ curl -sL "$DOWNLOAD_URL" > curl_$CURL_VERSION.orig.tar.gz
 echo "-----> Building curl"
 tar -xf curl_$CURL_VERSION.orig.tar.gz
 pushd curl-$CURL_VERSION
-./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor
-make
-make install
+./configure --prefix=$BUILD_DIR/vendor --with-ssl --with-nghttp2=$BUILD_DIR/vendor | indent
+make | indent
+make install | indent
 popd
 
 echo "-----> Setting up environment"
