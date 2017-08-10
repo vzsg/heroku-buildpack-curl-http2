@@ -1,4 +1,3 @@
-xecutable File  224 lines (179 sloc)  6.26 KB
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
