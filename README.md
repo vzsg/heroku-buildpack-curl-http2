@@ -13,7 +13,7 @@ See Heroku's documentation on [multiple buildpacks](https://devcenter.heroku.com
 Example for a Vapor app:
 
     $ heroku buildpacks:set https://github.com/vapor-community/heroku-buildpack.git
-    $ heroku buildpacks:add https://github.com/vzsg/heroku-buildpack-curl-http2.git
+    $ heroku buildpacks:add https://github.com/vzsg/heroku-buildpack-curl-http2.git --index 1
     $ git push heroku master
     ...
 
